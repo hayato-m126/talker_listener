@@ -1,0 +1,5 @@
+/**:
+  ros__parameters:
+    prefix_msg: "pre_yaml"
+    postfix_msg: "post_yaml"
+

@@ -34,18 +34,24 @@ class Talker(Node):
     def __init__(self):
         # Calls Node.__init__('talker')
         super().__init__("talker")
+        self.declare_parameter("prefix_msg", "default pre")
+        self._prefix_msg = (
+            self.get_parameter("prefix_msg").get_parameter_value().string_value
+        )
+        self.declare_parameter("postfix_msg", "default post")
+        self._postfix_msg = (
+            self.get_parameter("postfix_msg").get_parameter_value().string_value
+        )
+
         self.i = 0
         self.pub = self.create_publisher(String, "chatter", 10)
-        # Create a timer that calls a callback every second. A timer is recommended for executing
-        # periodic tasks because it does not block the main thread while it's waiting. This allows
-        # an executor to do other work when mutliple nodes are run in the same process.
         self.timer = self.create_timer(1.0, self.timer_callback)
 
     def timer_callback(self):
         msg = String()
-        msg.data = "Hello World: {0}".format(self.i)
+        msg.data = f"{self._prefix_msg}-{self.i}-{self._postfix_msg}"
         self.i += 1
-        self.get_logger().info('Publishing: "{0}"'.format(msg.data))
+        # self.get_logger().info('Publishing: "{0}"'.format(msg.data))
         self.pub.publish(msg)
 
 

@@ -12,12 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from pathlib import Path
+
+from ament_index_python.packages import get_package_share_directory
 from launch_ros.actions import Node
 
 from launch import LaunchDescription
 
 
 def generate_launch_description():
+    param_file = Path(
+        get_package_share_directory("talker_listener"), "config", "params.yaml"
+    ).as_posix()
+    override_param = {"prefix_msg": "pre_dict"}
     return LaunchDescription(
         [
             Node(
@@ -26,7 +33,7 @@ def generate_launch_description():
                 executable="talker_node.py",
                 output="screen",
                 name="talker",
-                # parameters=[],
+                parameters=[param_file, override_param],
             ),
             Node(
                 package="talker_listener",
