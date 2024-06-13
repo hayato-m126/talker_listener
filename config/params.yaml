@@ -1,5 +1,9 @@
 /talker_listener/talker1:
   ros__parameters:
-    prefix_msg: "pre_yaml"
-    postfix_msg: "post_yaml"
+    prefix_msg: "pre1_yaml"
+    postfix_msg: "post1_yaml"
 
+/talker_listener/talker2:
+  ros__parameters:
+    prefix_msg: "pre2_yaml"
+    postfix_msg: "post2_yaml"

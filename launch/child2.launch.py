@@ -12,11 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pathlib import Path
 
-from ament_index_python.packages import get_package_share_directory
+from launch_ros.actions import Node
 
-import launch
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
@@ -25,28 +23,27 @@ from launch.substitutions import LaunchConfiguration
 def generate_launch_description():
     launch_arg = []
     launch_arg.append(
-        DeclareLaunchArgument("launch_file_name", description="launch file name")
+        DeclareLaunchArgument("param_file", description="param file path")
     )
-
-    param_file = Path(
-        get_package_share_directory("talker_listener"), "config", "params.yaml"
-    ).as_posix()
-
-    target_dir = get_package_share_directory("talker_listener") + "/launch/"
-
-    child_arg = {"param_file": param_file}
-
-    child_launch = launch.actions.IncludeLaunchDescription(
-        launch.launch_description_sources.AnyLaunchDescriptionSource(
-            [
-                target_dir,
-                LaunchConfiguration("launch_file_name"),
-                ".launch.py",
-            ]  # 文字列結合は配列
-        ),
-        launch_arguments=child_arg.items(),
-    )
-
+    override_param = {"prefix_msg": "pre_dict"}
     return LaunchDescription(
-        [*launch_arg, child_launch],
+        [
+            *launch_arg,
+            Node(
+                package="talker_listener",
+                namespace="talker_listener",
+                executable="talker_node.py",
+                output="screen",
+                name="talker2",
+                parameters=[LaunchConfiguration("param_file"), override_param],
+            ),
+            Node(
+                package="talker_listener",
+                namespace="talker_listener",
+                executable="listener_node.py",
+                output="screen",
+                name="listener2",
+                # parameters=[],
+            ),
+        ]
     )
