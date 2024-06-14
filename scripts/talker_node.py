@@ -42,6 +42,13 @@ class Talker(Node):
         self._postfix_msg = (
             self.get_parameter("postfix_msg").get_parameter_value().string_value
         )
+        self.declare_parameter("array_value", ["default_v0", "default_v1"])
+        self._array_value = (
+            self.get_parameter("array_value").get_parameter_value().string_array_value
+        )
+
+        for v in self._array_value:
+            self.get_logger().info(f"{v=}")
 
         self.i = 0
         self.pub = self.create_publisher(String, "chatter", 10)

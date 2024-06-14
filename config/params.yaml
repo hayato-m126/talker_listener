@@ -2,8 +2,10 @@
   ros__parameters:
     prefix_msg: "pre1_yaml"
     postfix_msg: "post1_yaml"
+    array_value: ["v1-0", "v1-1"]
 
 /talker_listener/talker2:
   ros__parameters:
     prefix_msg: "pre2_yaml"
     postfix_msg: "post2_yaml"
+    array_value: ["v2-0", "v2-1"]

@@ -18,15 +18,23 @@ from ament_index_python.packages import get_package_share_directory
 from launch_ros.actions import Node
 
 from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
 
 
 def generate_launch_description():
+    launch_arg = []
+    launch_arg.append(DeclareLaunchArgument("array_value", description="array_value"))
     param_file = Path(
         get_package_share_directory("talker_listener"), "config", "params.yaml"
     ).as_posix()
-    override_param = {"prefix_msg": "pre_dict"}
+    override_param = {
+        "prefix_msg": "pre_dict",
+        "array_value": LaunchConfiguration("array_value"),
+    }
     return LaunchDescription(
         [
+            *launch_arg,
             Node(
                 package="talker_listener",
                 namespace="talker_listener",
