@@ -24,7 +24,13 @@ from launch.substitutions import LaunchConfiguration
 
 def generate_launch_description():
     launch_arg = []
-    launch_arg.append(DeclareLaunchArgument("array_value", description="array_value"))
+    launch_arg.append(
+        DeclareLaunchArgument(
+            "array_value",
+            description="array_value",
+            # default_value=["declare_v1", "declare_v2"], not working. this is string
+        )
+    )
     param_file = Path(
         get_package_share_directory("talker_listener"), "config", "params.yaml"
     ).as_posix()
