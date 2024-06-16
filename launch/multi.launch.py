@@ -30,8 +30,9 @@ def set_multi_launch(context: LaunchContext, *args: Any, **kwargs: Any):
     child_arg = {"param_file": param_file}
 
     multi_launch = []
-    for arg in args:
-        launch_name = context.perform_substitution(arg)
+    launch_names_str = context.perform_substitution(args[0])
+    launch_names_list: list = eval(launch_names_str)
+    for launch_name in launch_names_list:
         multi_launch.append(LogInfo(msg=launch_name))
 
     # for launch_name in launch_files:
@@ -57,7 +58,7 @@ def generate_launch_description():
             DeclareLaunchArgument(
                 "launch_files",
                 description="launch files",
-                default_value=["chatter1", "chatter2"],
+                default_value="['chatter1', 'chatter2']",
             ),
             OpaqueFunction(
                 function=set_multi_launch,
