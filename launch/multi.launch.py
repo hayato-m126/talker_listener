@@ -18,7 +18,13 @@ from typing import Any
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchContext, LaunchDescription
-from launch.actions import DeclareLaunchArgument, LogInfo, OpaqueFunction
+from launch.actions import (
+    DeclareLaunchArgument,
+    IncludeLaunchDescription,
+    LogInfo,
+    OpaqueFunction,
+)
+from launch.launch_description_sources import AnyLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
 
@@ -34,21 +40,18 @@ def set_multi_launch(context: LaunchContext, *args: Any, **kwargs: Any):
     launch_names_list: list = eval(launch_names_str)
     for launch_name in launch_names_list:
         multi_launch.append(LogInfo(msg=launch_name))
-
-    # for launch_name in launch_files:
-    #     multi_launch.append(LogInfo(msg=launch_name))
-    #     multi_launch.append(
-    #         launch.actions.IncludeLaunchDescription(
-    #             launch.launch_description_sources.AnyLaunchDescriptionSource(
-    #                 [
-    #                     target_dir,
-    #                     launch_name,
-    #                     ".launch.py",
-    #                 ]  # 文字列結合は配列
-    #             ),
-    #             launch_arguments=child_arg.items(),
-    #         )
-    #     )
+        multi_launch.append(
+            IncludeLaunchDescription(
+                AnyLaunchDescriptionSource(
+                    [
+                        target_dir,
+                        launch_name,
+                        ".launch.py",
+                    ]  # 文字列結合は配列
+                ),
+                launch_arguments=child_arg.items(),
+            )
+        )
     return multi_launch
 
 
@@ -58,7 +61,7 @@ def generate_launch_description():
             DeclareLaunchArgument(
                 "launch_files",
                 description="launch files",
-                default_value="['chatter1', 'chatter2']",
+                default_value="['child1', 'child2']",
             ),
             OpaqueFunction(
                 function=set_multi_launch,
