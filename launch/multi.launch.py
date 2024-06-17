@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from pathlib import Path
-from typing import Any
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -25,10 +24,9 @@ from launch.actions import (
     OpaqueFunction,
 )
 from launch.launch_description_sources import AnyLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
 
 
-def set_multi_launch(context: LaunchContext, *args: Any, **kwargs: Any):
+def set_multi_launch(context: LaunchContext):
     param_file = Path(
         get_package_share_directory("talker_listener"), "config", "params.yaml"
     ).as_posix()
@@ -36,7 +34,7 @@ def set_multi_launch(context: LaunchContext, *args: Any, **kwargs: Any):
     child_arg = {"param_file": param_file}
 
     multi_launch = []
-    launch_names_str = context.perform_substitution(args[0])
+    launch_names_str = context.launch_configurations["launch_files"]
     launch_names_list: list = eval(launch_names_str)
     for launch_name in launch_names_list:
         multi_launch.append(LogInfo(msg=launch_name))
@@ -63,11 +61,6 @@ def generate_launch_description():
                 description="launch files",
                 default_value="['child1', 'child2']",
             ),
-            OpaqueFunction(
-                function=set_multi_launch,
-                args=[
-                    LaunchConfiguration("launch_files"),
-                ],
-            ),
+            OpaqueFunction(function=set_multi_launch),
         ]
     )
