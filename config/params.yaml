@@ -9,3 +9,14 @@
     prefix_msg: "pre2_yaml"
     postfix_msg: "post2_yaml"
     array_value: ["v2-0", "v2-1"]
+
+/talker_listener/listener1:
+  ros__parameters:
+    prefix_msg: "I'm listener1"
+    postfix_msg: "finish"
+
+/talker_listener/listener2:
+  ros__parameters:
+    prefix_msg: "I'm listener2"
+    postfix_msg: "end"
+

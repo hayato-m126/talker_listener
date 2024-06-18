@@ -34,12 +34,19 @@ class Listener(Node):
     def __init__(self):
         # Calls Node.__init__('listener')
         super().__init__("listener")
+        self._prefix_msg = (
+            self.get_parameter("prefix_msg").get_parameter_value().string_value
+        )
+        self.declare_parameter("postfix_msg", "default post")
+        self._postfix_msg = (
+            self.get_parameter("postfix_msg").get_parameter_value().string_value
+        )
         self.sub = self.create_subscription(
             String, "chatter", self.chatter_callback, 10
         )
 
     def chatter_callback(self, msg):
-        self.get_logger().info('I heard: "%s"' % msg.data)
+        self.get_logger().info(f"{self._prefix_msg}-{msg.data}-{self._postfix_msg}")
 
 
 def main(args=None):
